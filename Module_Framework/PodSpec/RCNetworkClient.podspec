@@ -10,8 +10,8 @@ Pod::Spec.new do |s|
   s.author       = { "Rakesh" => "rakeshchander.cse@gmail.com" }
   s.platform     = :ios, "11.0"
   s.source       = { :http => ""}
-  s.preserve_paths = "RCNetworkClient.framework"
-  s.vendored_frameworks = "RCNetworkClient.framework"
+  s.preserve_paths = "RCNetworkClient.xcframework"
+  s.vendored_frameworks = "RCNetworkClient.xcframework"
   s.requires_arc = true
 
 end
