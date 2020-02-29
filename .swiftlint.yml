@@ -1,8 +1,0 @@
-excluded: 
-- Pods
-- Module_FrameworkTests
-- Module_Framework_Sample
-- Module_Framework_SampleUITests
-line_length:
-- 200 # warning
-- 300 # error
