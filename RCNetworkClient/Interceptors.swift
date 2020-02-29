@@ -19,11 +19,11 @@ public struct Response {
 }
 
 public protocol RequestInterceptor {
-    func interceptRequest(request : inout URLRequest) -> URLRequest
+    func interceptRequest(request : inout URLRequest)
 }
 
 public protocol ResponseInterceptor {
-    func interceptResponse(response: inout Response) -> (Response)
+    func interceptResponse(response: inout Response)
 }
 
 public protocol RetryInterceptor {
@@ -36,9 +36,9 @@ public struct APITimeError: Decodable {
     private let errorCode: String
     private let receivedResponse: Data?
 
-    public init(_ message: String, _ error: String, _ receivedResponse: Data? = nil ) {
+    public init(errorCode: String, message: String, receivedResponse: Data? = nil ) {
         self.message = message
-        self.errorCode = error
+        self.errorCode = errorCode
         self.receivedResponse = receivedResponse
     }
 

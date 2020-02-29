@@ -35,8 +35,13 @@ public extension GETAPIRequest {
                 completeGetURLPath.append("?\(param.key)=\(param.value)")
             }
         }
+        
+        guard let requestURL = URL.init(string: completeGetURLPath) else {
+            onError(APITimeError.init(errorCode: RCNetworkConstants.inValidRequestURL.rawValue, message: RCNetworkConstants.inValidRequestURL.rawValue))
+            return
+        }
 
-        var request = URLRequest.init(url: URL.init(string: completeGetURLPath)!, cachePolicy: self.cachingPolicy, timeoutInterval: self.timeoutInterval)
+        var request = URLRequest.init(url: requestURL, cachePolicy: self.cachingPolicy, timeoutInterval: self.timeoutInterval)
         request.httpMethod = "GET"
         
         request.applyInterceptors(interceptors: requestInterceptors)

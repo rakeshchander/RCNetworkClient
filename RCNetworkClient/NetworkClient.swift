@@ -10,6 +10,6 @@ import Foundation
 
 public protocol NetworkDispatcher {
     func consumeRequest(request: URLRequest,
-                                          onSuccess: @escaping (HTTPURLResponse, Data?) -> Void,
+                                          onSuccess: @escaping (HTTPURLResponse, Data) -> Void,
                                           onError: @escaping (APITimeError) -> Void)
 }

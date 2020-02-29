@@ -25,8 +25,8 @@ public extension POSTAPIRequest {
 
             var requestData: Data?
 
-            if requestBody is String {
-                requestData = (requestBody as! String).data(using: .utf8)!
+            if let stringBody = requestBody as? String {
+                requestData = stringBody.data(using: .utf8)
             } else {
                 let jsonEncoder = JSONEncoder()
                 let encodedJson = try jsonEncoder.encode(requestBody)
@@ -40,8 +40,13 @@ public extension POSTAPIRequest {
                 requestInterceptors = interceptors.requestInterceptors
                 responseInterceptors = interceptors.responseInterceptors
             }
+            
+            guard let requestURL = URL.init(string: self.endPoint) else {
+                onError(APITimeError.init(errorCode: RCNetworkConstants.inValidRequestURL.rawValue, message: RCNetworkConstants.inValidRequestURL.rawValue))
+                return
+            }
 
-            var request = URLRequest.init(url: URL.init(string: self.endPoint)!, cachePolicy: self.cachingPolicy, timeoutInterval: self.timeoutInterval)
+            var request = URLRequest.init(url: requestURL, cachePolicy: self.cachingPolicy, timeoutInterval: self.timeoutInterval)
             request.httpBody = requestData
             request.httpMethod = "POST"
             
