@@ -10,22 +10,19 @@ import Foundation
 
 public class CoreNetworkClient: NSObject, NetworkDispatcher {
     public func consumeRequest(request: URLRequest, onSuccess: @escaping (HTTPURLResponse, Data?) -> Void, onError: @escaping (APITimeError) -> Void) {
-
-        let task = URLSession.shared.dataTask(with: request) { (data, _, error) in
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, httpResponse, error) in
 
             guard let responseError = error else {
-
-                // No error occurred
-
-                return
-            }
-
-//            APITimeError.init(RCNetworkConstants.NetworkError.rawValue, responseError.localizedDescription)
-
-            guard let responseData = data else {
+                
+                onSuccess((httpResponse as? HTTPURLResponse) ?? HTTPURLResponse.init() , data)
 
                 return
             }
+
+            let customError = APITimeError.init(RCNetworkConstants.networkError.rawValue, responseError.localizedDescription)
+            
+            onError(customError)
 
         }
 

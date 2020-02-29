@@ -35,7 +35,7 @@ extension APIRequest {
         response.applyInterceptors(interceptors: responseInterceptors)
         
         guard let responseData = response.data else {
-            //TODO handle error callback
+            self.handleGenericError(onError: onError, errorCode: RCNetworkConstants.inValidResponse.rawValue, errorDescription: RCNetworkConstants.inValidResponse.rawValue)
             return
         }
         

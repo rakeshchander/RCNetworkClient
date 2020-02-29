@@ -53,7 +53,6 @@ public extension POSTAPIRequest {
                    
                }) { (error) in
                    // API Consumption Failure
-                   //use message from string fil
 
                    if (self.retryInterceptor?.errorCodes.contains(error.errorCodeInResponse) ?? false){
                        self.retryInterceptor?.interceptor.retryRequest(onSuccess: {
