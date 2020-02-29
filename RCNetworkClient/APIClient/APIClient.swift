@@ -97,7 +97,7 @@ extension APIRequest {
     
     func handleGenericError(onError: @escaping (APITimeError) -> Void, errorCode: String, errorDescription: String) {
 
-        let customError = APITimeError.init(errorDescription,errorCode)
+        let customError = APITimeError.init(errorCode: errorCode,message: errorDescription)
         DispatchQueue.main.async {
             onError(customError)
         }
@@ -108,7 +108,7 @@ extension APIRequest {
 extension URLRequest {
     mutating func applyInterceptors(interceptors: [RequestInterceptor]) {
         for interceptor in interceptors {
-            self = interceptor.interceptRequest(request: &self)
+            interceptor.interceptRequest(request: &self)
         }
     }
 }
@@ -116,7 +116,7 @@ extension URLRequest {
 extension Response {
     mutating func applyInterceptors(interceptors: [ResponseInterceptor]) {
         for interceptor in interceptors {
-            self = interceptor.interceptResponse(response: &self)
+            interceptor.interceptResponse(response: &self)
         }
     }
 }
