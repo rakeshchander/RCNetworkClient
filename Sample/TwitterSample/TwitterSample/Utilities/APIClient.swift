@@ -24,8 +24,7 @@ public extension APIRequest {
     
     var networkClient : NetworkDispatcher {
         get {
-//            AlamofireNetworkClient()
-            CoreNetworkClient()
+            AlamofireNetworkClient()
         }
     }
     
