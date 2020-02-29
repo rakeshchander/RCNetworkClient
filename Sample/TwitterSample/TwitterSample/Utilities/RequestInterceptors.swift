@@ -11,10 +11,9 @@ import RCNetworkClient
 
 class CommonRequestHeaderInterceptors : RequestInterceptor {
     
-    func interceptRequest(request: inout URLRequest) -> URLRequest {
+    func interceptRequest(request: inout URLRequest) {
         
         request.addValue("Bearer " + (APIDataManager.appToken ?? ""), forHTTPHeaderField: "Authorization")
         
-        return request
     }
 }

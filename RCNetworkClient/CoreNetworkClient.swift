@@ -9,7 +9,7 @@
 import Foundation
 
 public class CoreNetworkClient: NSObject, NetworkDispatcher {
-    public func consumeRequest(request: URLRequest, onSuccess: @escaping (HTTPURLResponse, Data) -> Void, onError: @escaping (APITimeError) -> Void) {
+    public func consumeRequest(request: URLRequest, onSuccess: @escaping (HTTPURLResponse, Data?) -> Void, onError: @escaping (APITimeError) -> Void) {
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             
@@ -19,7 +19,9 @@ public class CoreNetworkClient: NSObject, NetworkDispatcher {
                 return
             }
             
-            guard let responseData = data else {
+            if httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299  {
+                onSuccess(httpResponse, data)
+            } else {
                 
                 guard let responseError = error else {
                     let customError = APITimeError.init(errorCode: "\(httpResponse.statusCode)", message: "unexpectedError", receivedResponse: data)
@@ -30,13 +32,7 @@ public class CoreNetworkClient: NSObject, NetworkDispatcher {
                 let customError = APITimeError.init(errorCode: "\(httpResponse.statusCode)", message: responseError.localizedDescription)
                 
                 onError(customError)
-                
-                return
-                
             }
-            
-            
-            onSuccess(httpResponse, responseData)
             
 
         }
