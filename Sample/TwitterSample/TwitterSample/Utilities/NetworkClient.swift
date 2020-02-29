@@ -19,23 +19,22 @@ class AlamofireNetworkClient : NetworkDispatcher{
             .validate()
             .responseData { (response) in
                 
-                guard response.result.isSuccess else {
+                guard response.result.isSuccess, let httpResponse = response.response else {
                     
-                    let customError = APITimeError.init(response.result.error?.localizedDescription ?? "unexpectedError","\(response.response?.statusCode ?? -1)", response.data)
+                    let customError = APITimeError.init(errorCode: "\(response.response?.statusCode ?? -1)",message: response.result.error?.localizedDescription ?? "unexpectedError", receivedResponse: response.data)
                     onError(customError)
                     return
                 }
                 
                 guard let responseData = response.data else{
-                    let customError = APITimeError.init("unexpectedError", "500", response.data)
+                    let customError = APITimeError.init(errorCode: "\(httpResponse.statusCode)", message: "unexpectedError", receivedResponse: response.data)
                     onError(customError)
                     return
                 }
                 
-                onSuccess(response.response!, responseData)
+                onSuccess(httpResponse, responseData)
         }
         
     }
     
 }
-

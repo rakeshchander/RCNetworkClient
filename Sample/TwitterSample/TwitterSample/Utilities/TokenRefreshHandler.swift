@@ -20,7 +20,7 @@ struct AppTokenErrorDAO : Decodable {
 
 class TokenRequestHeaderInterceptor : RequestInterceptor{
     
-    func interceptRequest(request: inout URLRequest) -> URLRequest {
+    func interceptRequest(request: inout URLRequest) {
         
         let encodedConsumerKeyString:String = Constants.twitterConsumerKey.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)!
         let encodedConsumerSecretKeyString:String = Constants.twitterSecretKey.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)!
@@ -34,8 +34,7 @@ class TokenRequestHeaderInterceptor : RequestInterceptor{
         request.addValue("application/x-www-form-urlencoded;charset=UTF-8", forHTTPHeaderField: "Content-Type")
         
         request.addValue(encodingString, forHTTPHeaderField: "Authorization")
-        
-        return request
+    
     }
     
 }
@@ -68,7 +67,7 @@ class AppTokenRefreshWrapper : RetryInterceptor{
             APIDataManager.appToken = appToken.access_token
             onSuccess()
         }, onErrorResponse: { (error) in
-            onError(APITimeError.init("", ""))
+            onError(APITimeError.init(errorCode: RCNetworkConstants.inValidResponse.rawValue, message: RCNetworkConstants.inValidResponse.rawValue))
         }) { (error) in
             onError(error)
         }
