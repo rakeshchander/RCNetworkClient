@@ -23,10 +23,10 @@ Parse Response Body – Parse Received response, viz decrypt response data, extr
 
 
 ```swift
-class** CommonRequestHeaderInterceptors : RequestInterceptor {
+class CommonRequestHeaderInterceptors : RequestInterceptor {
 
-  **func** interceptRequest(request: **inout** URLRequest) {
-​    request.addValue("Bearer " + (APIDataManager.appToken ?? ""), forHTTPHeaderField: "Authorization") 
+  func interceptRequest(request: inout URLRequest) {
+    request.addValue("Bearer " + (APIDataManager.appToken ?? ""), forHTTPHeaderField: "Authorization") 
   }
 
 }
@@ -54,27 +54,27 @@ We have declared one protocol – *RetryInterceptor* having one method declarati
 
 
 ```swift
-class** AppTokenRefreshWrapper : RetryInterceptor{
+class AppTokenRefreshWrapper : RetryInterceptor{
 
-  **func** retryRequest(onSuccess: **@escaping** () -> Void, onError: **@escaping** (APITimeError) -> Void) {
+  func retryRequest(onSuccess: @escaping () -> Void, onError: @escaping (APITimeError) -> Void) {
 
-​    **let** params : String = "grant_type=client_credentials"
+    let params : String = "grant_type=client_credentials"
 
-​    RefreshAppTokenAPI().execute(requestBody: params, onSuccessResponse: { (appToken) **in**
+    RefreshAppTokenAPI().execute(requestBody: params, onSuccessResponse: { (appToken) in
 
-​      APIDataManager.appToken = appToken.access_token
+      APIDataManager.appToken = appToken.access_token
 
-​      onSuccess()
+      onSuccess()
 
-​    }, onErrorResponse: { (error) **in**
+    }, onErrorResponse: { (error) in
 
-​      onError(APITimeError.init(errorCode: RCNetworkConstants.inValidResponse.rawValue, message: RCNetworkConstants.inValidResponse.rawValue))
+      onError(APITimeError.init(errorCode: RCNetworkConstants.inValidResponse.rawValue, message: RCNetworkConstants.inValidResponse.rawValue))
 
-​    }) { (error) **in**
+    }) { (error) in
 
-​      onError(error)
+      onError(error)
 
-​    }
+    }
 
   }
 
@@ -100,65 +100,65 @@ Reference - [How to SetUp SPM in project?](https://www.ralfebert.de/ios/swift-pa
 At Project Level - Add Extension to APIRequest protocol to define default behaviours across API Calls.
 
 ```swift
-public** **extension** APIRequest {
+public extension APIRequest {
 
-  **var** retryInterceptor : (interceptor : RetryInterceptor, errorCodes : [String])?{
+  var retryInterceptor : (interceptor : RetryInterceptor, errorCodes : [String])?{
 
-​    **get**{
+    get{
 
-​      (AppTokenRefreshWrapper(), ["401", "400"])
+      (AppTokenRefreshWrapper(), ["401", "400"])
 
-​    }
-
-  }
-
-  **var** interceptors : (requestInterceptors: [RequestInterceptor],responseInterceptors: [ResponseInterceptor])? {
-
-​    **get** {
-
-​      ([CommonRequestHeaderInterceptors()], [])
-
-​    }
+    }
 
   }
 
-  **var** networkClient : NetworkDispatcher {
+  var interceptors : (requestInterceptors: [RequestInterceptor],responseInterceptors: [ResponseInterceptor])? {
 
-​    **get** {
+    get {
 
-​      CoreNetworkClient()
+      ([CommonRequestHeaderInterceptors()], [])
 
-​    }
-
-  }
-
-  **var** mimeType: String {
-
-​    **get**{
-
-​      ""
-
-​    }   
+    }
 
   }
 
-  **var** timeoutInterval : TimeInterval {
+  var networkClient : NetworkDispatcher {
 
-​    **get**{
+    get {
 
-​      30
+      CoreNetworkClient()
 
-​    }
+    }
 
   }
 
-  **var** cachingPolicy : URLRequest.CachePolicy {
+  var mimeType: String {
 
-​    **get**{
+    get{
 
-​      URLRequest.CachePolicy.useProtocolCachePolicy
+      ""
 
-​    }  
+    }   
+
+  }
+
+  var timeoutInterval : TimeInterval {
+
+    get{
+
+      30
+
+    }
+
+  }
+
+  var cachingPolicy : URLRequest.CachePolicy {
+
+    get{
+
+      URLRequest.CachePolicy.useProtocolCachePolicy
+
+    }  
 
   }
   
@@ -173,15 +173,15 @@ public** **extension** APIRequest {
 - Implement Protocols for required Request Type viz GET, POST
 
 ```swift
-struct** HomeFeedAPI: GETAPIRequest {   
+struct HomeFeedAPI: GETAPIRequest {   
 
-  **typealias** ResponseType = HomeResponseDAO
+  typealias ResponseType = HomeResponseDAO
 
-  **typealias** ErrorResponseType = AppTokenErrorDAO
+  typealias ErrorResponseType = AppTokenErrorDAO
 
-  **var** endPoint: String {
+  var endPoint: String {
 
-​    **return** PlatformConstants.serverURL + PlatformConstants.homeFeed
+    return PlatformConstants.serverURL + PlatformConstants.homeFeed
 
   }
 
@@ -191,23 +191,23 @@ struct** HomeFeedAPI: GETAPIRequest {
 For a particular API, if defaults are needed to be overridden then that can also be done as per below-
 
 ```swift
-struct** RefreshAppTokenAPI: POSTAPIRequest { 
+struct RefreshAppTokenAPI: POSTAPIRequest { 
 
-  **typealias** RequestBodyType = String
+  typealias RequestBodyType = String
 
-  **typealias** ResponseType = AppTokenDAO
+  typealias ResponseType = AppTokenDAO
 
-  **typealias** ErrorResponseType = AppTokenErrorDAO
+  typealias ErrorResponseType = AppTokenErrorDAO
 
-  **var** endPoint: String {
+  var endPoint: String {
 
-    **return** PlatformConstants.serverURL + PlatformConstants.refreshAppToken
+    return PlatformConstants.serverURL + PlatformConstants.refreshAppToken
 
   }
 
-  **var** interceptors: (requestInterceptors: [RequestInterceptor], responseInterceptors: [ResponseInterceptor])? {
+  var interceptors: (requestInterceptors: [RequestInterceptor], responseInterceptors: [ResponseInterceptor])? {
 
-    **return** ([TokenRequestHeaderInterceptor()],[])
+    return ([TokenRequestHeaderInterceptor()],[])
 
   }
 
@@ -217,19 +217,19 @@ struct** RefreshAppTokenAPI: POSTAPIRequest {
 **Execution**
 
 ```swift
-HomeFeedAPI().execute(requestParams: queryParams, onSuccessResponse: { [weak **self**] (response) **in**
+HomeFeedAPI().execute(requestParams: queryParams, onSuccessResponse: { [weak self] (response) in
 
-​      // Received Success Response DAO
+      // Received Success Response DAO
 
-​    }, onErrorResponse: { [**weak** **self**] (error) **in**
+    }, onErrorResponse: { [weak self] (error) in
 
-​      // Received Error Response DAO
+      // Received Error Response DAO
 
-​    }) { [**weak** **self**] (error) **in**
+    }) { [weak self] (error) in
 
-​      // Received Generic Error
+      // Received Generic Error
 
-​    }
+    }
 ```
 
 
@@ -243,39 +243,39 @@ In case, you want to use some other client - like Alamofire or FCM etc. you an d
 We have declared one protocol – *NetworkDispatcher* having one method declaration 
 
 ```swift
-class** AlamofireNetworkClient : NetworkDispatcher{
+class AlamofireNetworkClient : NetworkDispatcher{
 
-  **func** consumeRequest(request: URLRequest, onSuccess: **@escaping** (HTTPURLResponse, Data?) -> Void, onError: **@escaping** (APITimeError) -> Void) {
+  func consumeRequest(request: URLRequest, onSuccess: @escaping (HTTPURLResponse, Data?) -> Void, onError: @escaping (APITimeError) -> Void) {
 
-​    Alamofire.request(request)
+    Alamofire.request(request)
 
-​      .validate()
+      .validate()
 
-​      .responseData { (response) **in**
+      .responseData { (response) in
 
-​        **guard** response.result.isSuccess, **let** httpResponse = response.response **else** {
+        guard response.result.isSuccess, let httpResponse = response.response else {
 
-​          **let** customError = APITimeError.init(errorCode: "\(response.response?.statusCode ?? -1)",message: response.result.error?.localizedDescription ?? "unexpectedError", receivedResponse: response.data)
+          let customError = APITimeError.init(errorCode: "\(response.response?.statusCode ?? -1)",message: response.result.error?.localizedDescription ?? "unexpectedError", receivedResponse: response.data)
 
-​          onError(customError)
+          onError(customError)
 
-​          **return**
+          return
 
-​        }
+        }
 
-​        **guard** **let** responseData = response.data **else**{
+        guard let responseData = response.data else{
 
-​          **let** customError = APITimeError.init(errorCode: "\(httpResponse.statusCode)", message: "unexpectedError", receivedResponse: response.data)
+          let customError = APITimeError.init(errorCode: "\(httpResponse.statusCode)", message: "unexpectedError", receivedResponse: response.data)
 
-​          onError(customError)
+          onError(customError)
 
-​          **return**
+          return
 
-​        }
+        }
 
-​        onSuccess(httpResponse, responseData)
+        onSuccess(httpResponse, responseData)
 
-​    }
+    }
 
   }
 
@@ -287,33 +287,33 @@ class** AlamofireNetworkClient : NetworkDispatcher{
 We can have Mock Network Dispatcher for our Unit Tests target and define our own required responses as per logic test.
 
 ```swift
-class** CoreNetworkClientMock : NetworkDispatcher {
+class CoreNetworkClientMock : NetworkDispatcher {
 
-  **private** **var** targetResponse : Data?
+  private var targetResponse : Data?
 
-  **private** **var** errorResponse : APITimeError?
+  private var errorResponse : APITimeError?
 
-  **init**(success:Data?, error:APITimeError?) {
+  init(success:Data?, error:APITimeError?) {
 
-​    targetResponse = success
+    targetResponse = success
 
-​    errorResponse = error
+    errorResponse = error
 
   }
 
-  **func** consumeRequest(request: URLRequest, onSuccess: **@escaping** (HTTPURLResponse, Data?) -> Void, onError: **@escaping** (APITimeError) -> Void) {
+  func consumeRequest(request: URLRequest, onSuccess: @escaping (HTTPURLResponse, Data?) -> Void, onError: @escaping (APITimeError) -> Void) {
 
-​    **if** targetResponse != **nil** {
+    if targetResponse != nil {
 
-​      **let** fakeResponse = HTTPURLResponse.init()
+      let fakeResponse = HTTPURLResponse.init()
 
-​      onSuccess(fakeResponse, targetResponse)
+      onSuccess(fakeResponse, targetResponse)
 
-​    }**else** {
+    }else {
 
-​      onError(errorResponse!)
+      onError(errorResponse!)
 
-​    }
+    }
 
   }
 
