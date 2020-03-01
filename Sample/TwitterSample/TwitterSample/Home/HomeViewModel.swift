@@ -11,7 +11,6 @@ import UIKit
 
 class HomeViewModel : TweetViewModel {
     
-    let dataSource: HomeDataSource
     var delegate: HomeFlowDelegate?
     
     var searchText : String = "" {
@@ -22,8 +21,7 @@ class HomeViewModel : TweetViewModel {
     
     private var tweetsData : [TweetDAO] = []
     
-    init(delegate: HomeFlowDelegate?, dataSource: HomeDataSource) {
-        self.dataSource = dataSource
+    init(delegate: HomeFlowDelegate?) {
         self.delegate = delegate
     }
     
@@ -39,7 +37,6 @@ class HomeViewModel : TweetViewModel {
         }) { [weak self] (error) in
             self?.tweetsUpdatedErrorHandler?()
         }
-
         
     }
     
