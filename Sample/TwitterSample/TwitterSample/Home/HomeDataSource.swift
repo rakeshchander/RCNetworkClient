@@ -9,16 +9,6 @@
 import Foundation
 import RCNetworkClient
 
-class HomeDataSource {
-    
-    func getHomeFeed(queryParams : String, onSuccess : @escaping (HomeResponseDAO) -> Void, onError : @escaping (Decodable) -> Void ) {
-        
-        
-    }
-    
-    
-}
-
 struct HomeFeedAPI: GETAPIRequest {
     
     typealias ResponseType = HomeResponseDAO

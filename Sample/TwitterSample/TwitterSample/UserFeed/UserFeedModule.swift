@@ -32,8 +32,7 @@ class UserFeedModule {
     
     static func getUserFeedViewModel(component: UserFeedDependency) -> UserFeedViewModel {
         
-        let dataSource = UserFeedDataSource.init()
-        let viewModel = UserFeedViewModel.init(dataSource: dataSource, twitterUser: component.getUserId())
+        let viewModel = UserFeedViewModel.init(twitterUser: component.getUserId())
         
         return viewModel
     }

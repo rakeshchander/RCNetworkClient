@@ -9,15 +9,6 @@
 import Foundation
 import RCNetworkClient
 
-class UserFeedDataSource {
-    
-    func callUserFeedAPI(userId : String, successCallBack: @escaping ([TweetDAO]) -> Void, errorCallBack: @escaping(Decodable) -> Void) {
-    
-        
-    }
-    
-}
-
 struct UserFeedAPI: GETAPIRequest {
     
     typealias ResponseType = [TweetDAO]

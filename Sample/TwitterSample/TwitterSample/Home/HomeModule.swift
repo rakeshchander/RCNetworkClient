@@ -34,8 +34,7 @@ class HomeModule {
             flowDelegate = HomeNavigator()
         }
         
-        let dataSource = HomeDataSource.init()
-        let viewModel = HomeViewModel.init(delegate: flowDelegate, dataSource: dataSource)
+        let viewModel = HomeViewModel.init(delegate: flowDelegate)
         
         return viewModel
     }

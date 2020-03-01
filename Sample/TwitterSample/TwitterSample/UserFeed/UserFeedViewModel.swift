@@ -13,12 +13,9 @@ class UserFeedViewModel : TweetViewModel {
     
     let twitterUser : UserDAO
     
-    let dataSource: UserFeedDataSource
-    
     private var tweetsData : [TweetDAO] = []
     
-    init(dataSource: UserFeedDataSource, twitterUser : UserDAO) {
-        self.dataSource = dataSource
+    init(twitterUser : UserDAO) {
         self.twitterUser = twitterUser
     }
     
